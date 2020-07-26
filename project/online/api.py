@@ -1,8 +1,8 @@
-from project import db
-from project import app
+from project.online import db
+from project.online import app
 from flask import jsonify
 from flask import request
-from project import Article
+from project.online.models import Article
 import json
 
 from sqlalchemy.ext.declarative import DeclarativeMeta
@@ -30,7 +30,6 @@ class AlchemyEncoder(json.JSONEncoder):
 @app.route("/api/articles/", methods=["GET"])
 def get_all_articles():
     articles = db.session.query(Article).all()
-    print(articles)
     return json.dumps(articles, cls=AlchemyEncoder, indent=4, sort_keys=True)
 
 
@@ -49,4 +48,6 @@ def main_screen():
     return "Hello, NoteAnDO!"
 
 
-app.run(debug=True)
+if __name__ == '__main__':
+    db.create_all()
+    app.run()
